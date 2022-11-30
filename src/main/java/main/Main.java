@@ -30,15 +30,13 @@ public class Main extends Applet {
         }
 
         byte[] buf = apdu.getBuffer();
-        switch (buf[ISO7816.OFFSET_INS]) {
-            case (byte) 0x40:
+        
                 Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
                 apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
 
-                break;
-            default:
+             
                 // good practice: If you don't know the INStruction, say so:
                 ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
-        }
+        
     }
 }
