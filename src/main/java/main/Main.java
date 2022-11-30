@@ -18,6 +18,7 @@ public class Main extends Applet {
 
     private final static byte[] hello = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x72, 0x6f, 0x62, 0x65, 0x72, 0x74 };
     OwnerPIN pin = new OwnerPIN((byte) 20, (byte) 4);
+    public byte[] pincode = new byte[4]; 
     
     public static void install(byte[] buffer, short offset, byte length)
 
@@ -38,10 +39,13 @@ public class Main extends Applet {
                 Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
                 apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
                 break;
+
             // case to add the pincode to the card
             case (byte) 0x30:
+                Util.arrayCopy(buf, ISO7816.OFFSET_CDATA, pincode, (short)0, (byte) 4);
                 pin.update(buf, ISO7816.OFFSET_CDATA, (byte) 4);
                 break;
+
             case (byte) 0x20:
                 if (pin.isValidated()) {
                     Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
@@ -50,6 +54,13 @@ public class Main extends Applet {
                     ISOException.throwIt(ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED);
                 }
                 break;
+
+            case (byte) 0x50:
+            //TODO remove the pincode var after the tests are working
+                Util.arrayCopy(pincode, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 4);
+                apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 4);
+                break;
+
             default:
                 // good practice: If you don't know the INStruction, say so:
                 ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);

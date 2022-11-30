@@ -25,7 +25,13 @@ data, sw1, sw2 = connection.transmit(VERIFY + PIN)
 print("%x %x" % (sw1, sw2))
 
 #apdu to check pin 
-VERIFY = [0x80, 0x20, 0x00, 0x0C]
+VERIFY = [0x80, 0x20, 0x00, 0x00, 0x0C]
+data, sw1, sw2 = connection.transmit(VERIFY)
+print("%x %x" % (sw1, sw2))
+print('data:', data)
+
+#apdu to get back the pin 
+VERIFY = [0x80, 0x50, 0x00, 0x00, 0x04]
 data, sw1, sw2 = connection.transmit(VERIFY)
 print("%x %x" % (sw1, sw2))
 print('data:', data)
