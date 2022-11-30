@@ -17,3 +17,15 @@ GETDATA = [0x80, 0x40, 0x00, 0x00, 0x0C]
 data, sw1, sw2 = connection.transmit(GETDATA)
 print("%x %x" % (sw1, sw2))
 print('data:', data)
+
+#check code pin 
+VERIFY = [0x80, 0x30, 0x00, 0x04]
+PIN = [0x00, 0x00, 0x00, 0x01]
+data, sw1, sw2 = connection.transmit(VERIFY + PIN)
+print("%x %x" % (sw1, sw2))
+
+#apdu to check pin 
+VERIFY = [0x80, 0x20, 0x00, 0x0C]
+data, sw1, sw2 = connection.transmit(VERIFY)
+print("%x %x" % (sw1, sw2))
+print('data:', data)
