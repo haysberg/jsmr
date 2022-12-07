@@ -23,7 +23,7 @@ public class Main extends Applet {
     public static void install(byte[] buffer, short offset, byte length)
 
     {
-        // GP-compliant JavaCard applet registration
+        // GP-cOFFSET_CDATAompliant JavaCard applet registration
         new Main().register();
     }
 
@@ -44,7 +44,7 @@ public class Main extends Applet {
             case (byte) 0x30:
                 Util.arrayCopy(buf, ISO7816.OFFSET_CDATA, pincode, (short)0, (byte) 4);
                 pin.update(buf, ISO7816.OFFSET_CDATA, (byte) 4);
-                break;
+                return;
 
             case (byte) 0x20:
                 if (pin.isValidated()) {
