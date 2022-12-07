@@ -50,10 +50,11 @@ public class Main extends Applet {
                 if (pin.isValidated()) {
                     Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
                     apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
+                    apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
                 } else {
                     ISOException.throwIt(ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED);
                 }
-                break;
+                return;
 
             case (byte) 0x50:
             //TODO remove the pincode var after the tests are working
