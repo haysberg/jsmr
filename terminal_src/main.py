@@ -17,7 +17,7 @@ def hello_robert() -> None:
 
 def get_data() -> None:
     print("Calling Hello World...")
-    GETDATA = [0x00, 0x40, 0x00, 0x00, 0x0C]
+    GETDATA = [0x80, 0x40, 0x00, 0x00, 0x0C]
     data, sw1, sw2 = connection.transmit(GETDATA)
     pretty_printer(data, sw1, sw2)
 
