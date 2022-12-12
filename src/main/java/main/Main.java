@@ -1,8 +1,5 @@
 package src.main.java.main;
 
-/**
- * 
- */
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
@@ -20,12 +17,10 @@ public class Main extends Applet {
     public static void install(byte[] buffer, short offset, byte length)
 
     {
-        // GP-cOFFSET_CDATAompliant JavaCard applet registration
         new Main().register();
     }
 
     public void process(APDU apdu) {
-        // Good practice: Return 9000 on SELECT
         if (selectingApplet()) {
             return;
         }
@@ -37,12 +32,12 @@ public class Main extends Applet {
                 apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
                 return;
 
-            // case to add the pincode to the card
             case (byte) 0x30:
                 Util.arrayCopy(buf, ISO7816.OFFSET_CDATA, pincode, (short)0, (byte) 4);
                 pin.update(buf, ISO7816.OFFSET_CDATA, (byte) 4);
                 return;
 
+            //Non utilisé, sert à débugger
             case (byte) 0x20:
                 if (pin.isValidated()) {
                     Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
@@ -64,13 +59,11 @@ public class Main extends Applet {
                 return;
 
             case (byte) 0x50:
-            //TODO remove the pincode var after the tests are working
                 Util.arrayCopy(pincode, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 4);
                 apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 4);
                 break;
 
             default:
-                // good practice: If you don't know the INStruction, say so:
                 ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
         }
     }
