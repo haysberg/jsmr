@@ -10,10 +10,7 @@ import javacard.framework.OwnerPIN;
 import javacard.framework.APDU;
 import javacard.framework.Util;
 
-/**
- * @author Robert
- *
- */
+
 public class Main extends Applet {
 
     private final static byte[] hello = { 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x72, 0x6f, 0x62, 0x65, 0x72, 0x74 };
@@ -38,7 +35,7 @@ public class Main extends Applet {
             case (byte) 0x40:
                 Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
                 apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
-                break;
+                return;
 
             // case to add the pincode to the card
             case (byte) 0x30:
@@ -50,6 +47,17 @@ public class Main extends Applet {
                 if (pin.isValidated()) {
                     Util.arrayCopy(hello, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 12);
                     apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 12);
+                } else {
+                    ISOException.throwIt(ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED);
+                }
+                return;
+
+            case (byte) 0x01:
+                byte[] tmpArray = new byte[4]; 
+                Util.arrayCopy(tmpArray, (byte) 0, buf, ISO7816.OFFSET_CDATA, (byte) 4);
+                if(Util.arrayCompare(tmpArray, (short)0, pincode,(short)0,(short)4) == 0){
+                    apdu.setOutgoingAndSend(ISO7816.OFFSET_CDATA, (byte) 4);
+                    break;
                 } else {
                     ISOException.throwIt(ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED);
                 }
